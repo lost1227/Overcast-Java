@@ -22,7 +22,7 @@ public class Parser {
 	 * @param pass The password to login with the username
 	 * @return True if successfully set authToken, False if IOException occurs.
 	 */
-	int login(String user, char[] pass) {
+	int loginWeb(String user, char[] pass) {
 		try {
 			System.out.println("User: " + user + " Pass: " + new String(pass));
 			Connection.Response conn = Jsoup.connect("https://overcast.fm/login").data("email", user, "password", new String(pass)).method(Method.POST).execute();
@@ -64,7 +64,7 @@ public class Parser {
 		return 5;
 	}
 	
-	Boolean loginFromFile() {
+	int loginFromFile() {
 		Properties prop = new Properties();
 		InputStream input = null;
 		try {
@@ -73,18 +73,22 @@ public class Parser {
 			authToken = prop.getProperty("token");
 		} catch (IOException ex) {
 			ex.printStackTrace();
-			return false;
+			return 2;
 		} finally {
 			if (input != null) {
 				try {
+					if ( authToken == null ) {
+						input.close();
+						return 1;
+					}
 					input.close();
-					return true;
+					return 0;
 				} catch (IOException e) {
 					e.printStackTrace();
-					return false;
+					return 3;
 				}
 			}
 		}
-		return false;
+		return 4;
 	}
 }
