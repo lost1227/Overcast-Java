@@ -83,7 +83,7 @@ class login extends JPanel implements ActionListener {
 class mainList extends JPanel {
 	public mainList(GridLayout layout) {
 		super(layout);
-		// TODO Parser will return a JFrame with a grid layout with each cell representing a podcast. Each cell of the grid will be another JFrame with a gridbag layout.
+		// TODO Parser will return an array of JFrame with gridbag layouts, each representing a podcast.
 	}
 }
 

@@ -4,13 +4,20 @@ import java.io.IOException;
 
 import org.jsoup.*;
 import org.jsoup.Connection.*;
+import org.jsoup.nodes.*;
+import org.jsoup.select.*;
 
 import java.io.FileOutputStream;
+import java.awt.GridBagLayout;
+import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Properties;
 
+import javax.swing.JPanel;
+
 public class Parser {
-	String authToken;
+	String authToken = "none";
 	
 	/**
 	 * Will be called by GUI. Will return (an array?) JPanels to be displayed in the GUI
@@ -90,5 +97,36 @@ public class Parser {
 			}
 		}
 		return 4;
+	}
+	
+	JPanel getPanel(BufferedImage img, String show, String title, String date) {
+		JPanel panel = new JPanel(new GridBagLayout());
+		
+	}
+	
+	ArrayList<JPanel> getMain() {
+		Element home;
+		ArrayList<JPanel> panels = new ArrayList<JPanel>();
+		if(authToken.equals("none")) {
+			System.out.println("Not logged in!");
+			return null;
+		}
+		try {
+			home = Jsoup.connect("https://overcast.fm/podcasts").cookie("o", authToken).get().body();
+		} catch (IOException e) {
+			// TODO Catch no Internet
+			e.printStackTrace();
+			return null;
+		}
+		Elements episodes = home.select(".episodecell");
+		for(Element e : episodes) {
+			BufferedImage img = null; // TODO get image
+			Elements children = e.getElementsByClass("titlestack");
+			String show = children.get(0).text();
+			String title = children.get(1).text();
+			String date = children.get(2).text();
+			panels.add(getPanel(img, show, title, date));
+		}
+		return panels;
 	}
 }
