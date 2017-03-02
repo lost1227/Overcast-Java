@@ -2,6 +2,8 @@ package com.Jordan.overcast;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+
 import javax.swing.*;
 import javax.swing.border.*;
 
@@ -60,7 +62,7 @@ class login extends JPanel implements ActionListener {
 			switch(parser.loginWeb(email.getText(), pass.getPassword())) {
 			case 0:
 				GUI.loggedIn = true;
-				//TODO replace frame once logged in
+				GUI.base.add(new JScrollPane(new mainList()), BorderLayout.CENTER);
 				break;
 			case 1:
 				showError("Invalid username/password");
@@ -81,9 +83,18 @@ class login extends JPanel implements ActionListener {
 }
 
 class mainList extends JPanel {
-	public mainList(GridLayout layout) {
-		super(layout);
-		// TODO Parser will return an array of JFrame with gridbag layouts, each representing a podcast.
+	public mainList() {
+		super(new GridBagLayout());
+		GridBagConstraints consts = new GridBagConstraints();
+		ArrayList<JPanel> panels = GUI.parser.getMain();
+		consts.fill = GridBagConstraints.NONE;
+		consts.anchor = GridBagConstraints.WEST;
+		consts.gridx = 0;
+		consts.gridy = 0;
+		for(int i = 0; i < panels.size(); i++) {
+			consts.gridy = i;
+			add(panels.get(i),consts);
+		}
 	}
 }
 
@@ -92,6 +103,7 @@ public class GUI extends JFrame {
 	static boolean loggedIn = false;
 	static Parser parser;
 	static GUI main;
+	static JPanel base;
 	
 	public GUI() {
 		setTitle("Overcast");
@@ -102,12 +114,12 @@ public class GUI extends JFrame {
 		main = new GUI();
 		parser = new Parser();
 		main.addWindowListener(new exit());
-		JPanel base = new JPanel(new BorderLayout());
+		base = new JPanel(new BorderLayout());
 		main.add(base);
 		switch(parser.loginFromFile()) {
 		case 0:
 			loggedIn = true;
-			//TODO replace frame once logged in
+			base.add(new JScrollPane(new mainList()), BorderLayout.CENTER);
 			break;
 		case 1:
 			loggedIn = false;

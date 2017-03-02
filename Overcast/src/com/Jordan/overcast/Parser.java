@@ -129,10 +129,14 @@ public class Parser {
 		dateConsts.gridx = 1;
 		dateConsts.gridy = 3;
 		
-		JLabel imgComp = new JLabel(new ImageIcon(img));
+		JLabel imgComp = new JLabel(new ImageIcon(img.getScaledInstance(80, 80, Image.SCALE_SMOOTH)));
 		JLabel showComp = new JLabel(show);
 		JLabel titleComp = new JLabel(title);
 		JLabel dateComp = new JLabel(date);
+		
+		imgComp.setPreferredSize(new Dimension(80,80));
+		
+		titleComp.setFont(new Font("Helvetica", Font.PLAIN, 18));
 		
 		panel.add(imgComp, imgConsts);
 		panel.add(showComp, showConsts);
@@ -158,7 +162,7 @@ public class Parser {
 			e.printStackTrace();
 			return null;
 		}
-		Elements episodes = home.select(".episodecell");
+		Elements episodes = home.getElementsByClass("episodecell");
 		for(Element e : episodes) {
 			BufferedImage img = null;
 			try {
@@ -171,7 +175,8 @@ public class Parser {
 				System.out.println("Could not read url as image");
 				e1.printStackTrace();
 			}
-			Elements children = e.getElementsByClass("titlestack");
+			Elements children = e.getElementsByClass("titlestack").get(0).children();
+			System.out.println("Children: " + children.size());
 			String show = children.get(0).text();
 			String title = children.get(1).text();
 			String date = children.get(2).text();
