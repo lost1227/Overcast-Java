@@ -10,13 +10,15 @@ import org.jsoup.nodes.*;
 import org.jsoup.select.*;
 
 import java.io.FileOutputStream;
-import java.awt.GridBagLayout;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Properties;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class Parser {
@@ -104,6 +106,41 @@ public class Parser {
 	
 	JPanel getPanel(BufferedImage img, String show, String title, String date) {
 		JPanel panel = new JPanel(new GridBagLayout());
+		GridBagConstraints imgConsts = new GridBagConstraints();
+		GridBagConstraints showConsts = new GridBagConstraints();
+		GridBagConstraints titleConsts = new GridBagConstraints();
+		GridBagConstraints dateConsts = new GridBagConstraints();
+		
+		imgConsts.fill = GridBagConstraints.BOTH;
+		imgConsts.gridx = 0;
+		imgConsts.gridy = 0;
+		imgConsts.gridheight = 4;
+		
+		showConsts.fill = GridBagConstraints.HORIZONTAL;
+		showConsts.gridx = 1;
+		showConsts.gridy = 0;
+		
+		titleConsts.fill = GridBagConstraints.HORIZONTAL;
+		titleConsts.gridx = 1;
+		titleConsts.gridy = 1;
+		titleConsts.gridheight = 2;
+		
+		dateConsts.fill = GridBagConstraints.HORIZONTAL;
+		dateConsts.gridx = 1;
+		dateConsts.gridy = 3;
+		
+		JLabel imgComp = new JLabel(new ImageIcon(img));
+		JLabel showComp = new JLabel(show);
+		JLabel titleComp = new JLabel(title);
+		JLabel dateComp = new JLabel(date);
+		
+		panel.add(imgComp, imgConsts);
+		panel.add(showComp, showConsts);
+		panel.add(titleComp, titleConsts);
+		panel.add(dateComp, dateConsts);
+		
+		return panel;
+		
 		
 	}
 	
