@@ -1,6 +1,8 @@
 package com.Jordan.overcast;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import org.jsoup.*;
 import org.jsoup.Connection.*;
@@ -14,6 +16,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Properties;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 public class Parser {
@@ -120,7 +123,17 @@ public class Parser {
 		}
 		Elements episodes = home.select(".episodecell");
 		for(Element e : episodes) {
-			BufferedImage img = null; // TODO get image
+			BufferedImage img = null;
+			try {
+				URL url = new URL(e.getElementsByClass("art").attr("src"));
+				img = ImageIO.read(url);
+			} catch (MalformedURLException e1) {
+				System.out.println("Got bad url for image");
+				e1.printStackTrace();
+			} catch (IOException e1) {
+				System.out.println("Could not read url as image");
+				e1.printStackTrace();
+			}
 			Elements children = e.getElementsByClass("titlestack");
 			String show = children.get(0).text();
 			String title = children.get(1).text();
