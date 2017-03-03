@@ -111,16 +111,19 @@ public class Parser {
 		GridBagConstraints titleConsts = new GridBagConstraints();
 		GridBagConstraints dateConsts = new GridBagConstraints();
 		
+		panel.setBackground(Color.WHITE);
+		
 		imgConsts.fill = GridBagConstraints.BOTH;
 		imgConsts.gridx = 0;
 		imgConsts.gridy = 0;
 		imgConsts.gridheight = 4;
+		imgConsts.insets = new Insets(0,0,0,2);
 		
 		showConsts.fill = GridBagConstraints.HORIZONTAL;
 		showConsts.gridx = 1;
 		showConsts.gridy = 0;
 		
-		titleConsts.fill = GridBagConstraints.HORIZONTAL;
+		titleConsts.fill = GridBagConstraints.BOTH;
 		titleConsts.gridx = 1;
 		titleConsts.gridy = 1;
 		titleConsts.gridheight = 2;

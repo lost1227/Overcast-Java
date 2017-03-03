@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.text.AbstractDocument.Content;
 
 class exit extends WindowAdapter {
 	public void windowClosing(WindowEvent e) {
@@ -62,7 +63,8 @@ class login extends JPanel implements ActionListener {
 			switch(parser.loginWeb(email.getText(), pass.getPassword())) {
 			case 0:
 				GUI.loggedIn = true;
-				GUI.base.add(new JScrollPane(new mainList()), BorderLayout.CENTER);
+				GUI.titles = new JScrollPane(new mainList());
+				GUI.main.add(GUI.titles, BorderLayout.CENTER);
 				break;
 			case 1:
 				showError("Invalid username/password");
@@ -91,10 +93,12 @@ class mainList extends JPanel {
 		consts.anchor = GridBagConstraints.WEST;
 		consts.gridx = 0;
 		consts.gridy = 0;
+		consts.insets = new Insets(2,2,2,2);
 		for(int i = 0; i < panels.size(); i++) {
 			consts.gridy = i;
 			add(panels.get(i),consts);
 		}
+		setBackground(Color.WHITE);
 	}
 }
 
@@ -103,37 +107,42 @@ public class GUI extends JFrame {
 	static boolean loggedIn = false;
 	static Parser parser;
 	static GUI main;
-	static JPanel base;
+	static JScrollPane titles;
+	
+	Container mainContent;
 	
 	public GUI() {
 		setTitle("Overcast");
 		setLocation(20,0);
+		setPreferredSize(new Dimension(420, 560));
+		mainContent = getContentPane();
+		mainContent.setLayout(new BorderLayout());
 	}
 
 	public static void main(String[] args) {
 		main = new GUI();
 		parser = new Parser();
 		main.addWindowListener(new exit());
-		base = new JPanel(new BorderLayout());
-		main.add(base);
 		switch(parser.loginFromFile()) {
 		case 0:
 			loggedIn = true;
-			base.add(new JScrollPane(new mainList()), BorderLayout.CENTER);
+			titles = new JScrollPane(new mainList());
+			main.add(titles, BorderLayout.CENTER);
 			break;
 		case 1:
 			loggedIn = false;
 			System.out.println("No authtoken saved");
-			base.add(new login(parser, new GridLayout(3,1)), BorderLayout.CENTER);
+			main.add(new login(parser, new GridLayout(3,1)), BorderLayout.CENTER);
+			main.setPreferredSize(new Dimension(420,560));
 		case 2:
 		case 3:
 			loggedIn = false;
 			System.out.println("Error reading file");
-			base.add(new login(parser, new GridLayout(3,1)), BorderLayout.CENTER);
+			main.add(new login(parser, new GridLayout(3,1)), BorderLayout.CENTER);
 		case 4:
 			loggedIn = false;
 			System.out.println("Unknown error");
-			base.add(new login(parser, new GridLayout(3,1)), BorderLayout.CENTER);
+			main.add(new login(parser, new GridLayout(3,1)), BorderLayout.CENTER);
 		}
 		main.pack();
 		main.setVisible(true);
