@@ -88,7 +88,7 @@ class mainList extends JPanel {
 	public mainList() {
 		super(new GridBagLayout());
 		GridBagConstraints consts = new GridBagConstraints();
-		ArrayList<JPanel> panels = GUI.parser.getMain();
+		ArrayList<JPanel> panels = GUI.parser.getTitles();
 		consts.fill = GridBagConstraints.NONE;
 		consts.anchor = GridBagConstraints.WEST;
 		consts.gridx = 0;
@@ -108,6 +108,7 @@ public class GUI extends JFrame {
 	static Parser parser;
 	static GUI main;
 	static JScrollPane titles;
+	static DB db;
 	
 	Container mainContent;
 	
@@ -122,6 +123,7 @@ public class GUI extends JFrame {
 	public static void main(String[] args) {
 		main = new GUI();
 		parser = new Parser();
+		db = new DB();
 		main.addWindowListener(new exit());
 		switch(parser.loginFromFile()) {
 		case 0:
