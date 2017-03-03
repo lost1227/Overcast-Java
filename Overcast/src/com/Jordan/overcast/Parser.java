@@ -165,6 +165,11 @@ public class Parser {
 			e.printStackTrace();
 			return null;
 		}
+		/**
+		 * For each element e, get the href and see if it's in the database. If it is, load from db instead of from url.
+		 * TODO create new class to manage db connections
+		 * refer https://www.tutorialspoint.com/sqlite/sqlite_java.htm
+		 */
 		Elements episodes = home.getElementsByClass("episodecell");
 		for(Element e : episodes) {
 			BufferedImage img = null;
