@@ -6,6 +6,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.LayoutManager;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -21,12 +22,14 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.text.TableView.TableCell;
 
 import org.jsoup.Connection;
 import org.jsoup.Connection.Method;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
 
 public class Parser {
 	String authToken = "none";
@@ -39,7 +42,6 @@ public class Parser {
 	 * Logs in to overcast and sets the local property authToken to the authentication token used by overcast to login. Either this method or the method loginFromFile must be called before any other connection to overcast can be made.
 	 * @param user The username to login to overcast with
 	 * @param pass The password to login with the username
-	 * @return True if successfully set authToken, False if IOException occurs.
 	 */
 	int loginWeb(String user, char[] pass) {
 		try {
@@ -111,8 +113,9 @@ public class Parser {
 		return 4;
 	}
 	
-	JPanel getShowPanel(BufferedImage img, String show) {
-		JPanel panel = new JPanel(new GridBagLayout());
+	
+	TitleCell getShowPanel(BufferedImage img, String show, String url) {
+		TitleCell panel = new TitleCell(new GridBagLayout());
 		GridBagConstraints imgConsts = new GridBagConstraints();
 		GridBagConstraints showConsts = new GridBagConstraints();
 		
@@ -139,6 +142,8 @@ public class Parser {
 		
 		panel.add(imgComp, imgConsts);
 		panel.add(showComp, showConsts);
+		
+		panel.url = url;
 		
 		return panel;
 	}
@@ -181,9 +186,9 @@ public class Parser {
 		return panel;
 	}
 	
-	ArrayList<JPanel> getTitles() {
+	ArrayList<TitleCell> getTitles() {
 		Element home;
-		ArrayList<JPanel> panels = new ArrayList<JPanel>();
+		ArrayList<TitleCell> panels = new ArrayList<TitleCell>();
 		if(authToken.equals("none")) {
 			System.out.println("Not logged in!");
 			return null;
@@ -214,34 +219,15 @@ public class Parser {
 				e1.printStackTrace();
 			}
 			String title = e.getElementsByClass("title").get(0).text();
-			panels.add(getShowPanel(img, title));
+			String showURL = e.attr("abs:href");
+			panels.add(getShowPanel(img, title, showURL));
 		}
-		/**Elements episodes = home.getElementsByClass("episodecell");
-		for(Element e : episodes) {
-			BufferedImage img = null;
-			try {
-				URL url = new URL(e.getElementsByClass("art").attr("src"));
-				img = ImageIO.read(url);
-			} catch (MalformedURLException e1) {
-				System.out.println("Got bad url for image");
-				e1.printStackTrace();
-			} catch (IOException e1) {
-				System.out.println("Could not read url as image");
-				e1.printStackTrace();
-			}
-			Elements children = e.getElementsByClass("titlestack").get(0).children();
-			System.out.println("Children: " + children.size());
-			String show = children.get(0).text();
-			String title = children.get(1).text();
-			String date = children.get(2).text();
-			panels.add(getPanel(img, show, title, date));
-		}*/
 		
 		
 		
 		return panels;
 	}
-	ArrayList<JPanel> getEpisodes(String url) {
+	ArrayList<JPanel> getEpisodes() {
 		Element cast;
 		ArrayList<JPanel> panels = new ArrayList<JPanel>();
 		if(authToken.equals("none")) {

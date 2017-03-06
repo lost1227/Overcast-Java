@@ -1,6 +1,7 @@
 package com.Jordan.overcast;
 
 import java.awt.*;
+
 import java.awt.event.*;
 import java.util.ArrayList;
 
@@ -84,11 +85,37 @@ class login extends JPanel implements ActionListener {
 	}
 }
 
+class clickable implements MouseListener {
+
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		TitleCell clicked = (TitleCell)e.getComponent();
+		
+	}
+	
+}
+
 class mainList extends JPanel {
 	public mainList() {
 		super(new GridBagLayout());
 		GridBagConstraints consts = new GridBagConstraints();
-		ArrayList<JPanel> panels = GUI.parser.getTitles();
+		ArrayList<TitleCell> panels = GUI.parser.getTitles();
 		consts.fill = GridBagConstraints.NONE;
 		consts.anchor = GridBagConstraints.WEST;
 		consts.gridx = 0;
