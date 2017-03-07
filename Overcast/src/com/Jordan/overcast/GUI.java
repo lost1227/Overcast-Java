@@ -89,26 +89,55 @@ class clickable implements MouseListener {
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
+		System.out.println("Clicked!");
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
+		System.out.println("Hovered!");
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
+		System.out.println("Unhovered!");
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
+		System.out.println("Clicked down!");
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
+		System.out.println("Clicked up!");
 		TitleCell clicked = (TitleCell)e.getComponent();
-		
+		System.out.println("Size: " + GUI.titles.getComponentCount());
+		GUI.titles.remove(2);
+		GUI.titles.add(new subList(clicked.url));
+		GUI.titles.validate();
+		GUI.titles.repaint();
 	}
 	
+}
+
+class subList extends JPanel {
+	public subList(String URL) {
+		super(new GridBagLayout());
+		GridBagConstraints consts = new GridBagConstraints();
+		ArrayList<JPanel> panels = GUI.parser.getEpisodes(URL);
+		consts.fill = GridBagConstraints.NONE;
+		consts.anchor = GridBagConstraints.WEST;
+		consts.gridx = 0;
+		consts.gridy = 0;
+		consts.insets = new Insets(2,2,2,2);
+		System.out.println("Panels size: " + panels.size());
+		System.out.println("URL: " + URL);
+		for(int i = 0; i < panels.size(); i++) {
+			consts.gridy = i;
+			add(panels.get(i),consts);
+		}
+		setBackground(Color.WHITE); 
+	}
 }
 
 class mainList extends JPanel {
@@ -123,6 +152,7 @@ class mainList extends JPanel {
 		consts.insets = new Insets(2,2,2,2);
 		for(int i = 0; i < panels.size(); i++) {
 			consts.gridy = i;
+			panels.get(i).addMouseListener(GUI.clicky);
 			add(panels.get(i),consts);
 		}
 		setBackground(Color.WHITE);
@@ -136,6 +166,7 @@ public class GUI extends JFrame {
 	static GUI main;
 	static JScrollPane titles;
 	static DB db;
+	static clickable clicky;
 	
 	Container mainContent;
 	
@@ -151,6 +182,7 @@ public class GUI extends JFrame {
 		main = new GUI();
 		parser = new Parser();
 		db = new DB();
+		clicky = new clickable();
 		main.addWindowListener(new exit());
 		switch(parser.loginFromFile()) {
 		case 0:

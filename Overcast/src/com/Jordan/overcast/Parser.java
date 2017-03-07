@@ -227,7 +227,7 @@ public class Parser {
 		
 		return panels;
 	}
-	ArrayList<JPanel> getEpisodes() {
+	ArrayList<JPanel> getEpisodes(String URL) {
 		Element cast;
 		ArrayList<JPanel> panels = new ArrayList<JPanel>();
 		if(authToken.equals("none")) {
@@ -235,7 +235,7 @@ public class Parser {
 			return null;
 		}
 		try {
-			cast = Jsoup.connect("https://overcast.fm/podcasts").cookie("o", authToken).get().body();
+			cast = Jsoup.connect(URL).cookie("o", authToken).get().body();
 		} catch (IOException e) {
 			// TODO Catch no Internet
 			e.printStackTrace();
@@ -248,6 +248,11 @@ public class Parser {
 			String title = children.get(0).text();
 			String date = children.get(1).text();
 			String description = children.get(2).text();
+			/**
+			System.out.println("Title: " + title);
+			System.out.println("Date: " + date);
+			System.out.println("Description: " + description);
+			*/
 			panels.add(getEpisodePanel(title, date, description));
 		}
 		return panels;
