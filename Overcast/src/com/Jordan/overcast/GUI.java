@@ -64,8 +64,8 @@ class login extends JPanel implements ActionListener {
 			switch(parser.loginWeb(email.getText(), pass.getPassword())) {
 			case 0:
 				GUI.loggedIn = true;
-				GUI.titles = new JScrollPane(new mainList());
-				GUI.main.add(GUI.titles, BorderLayout.CENTER);
+				GUI.shows = new mainList();
+				GUI.scrollpaneviewport.add(GUI.shows);
 				break;
 			case 1:
 				showError("Invalid username/password");
@@ -111,11 +111,11 @@ class clickable implements MouseListener {
 	public void mouseReleased(MouseEvent e) {
 		System.out.println("Clicked up!");
 		TitleCell clicked = (TitleCell)e.getComponent();
-		System.out.println("Size: " + GUI.titles.getComponentCount());
-		GUI.titles.remove(2);
-		GUI.titles.add(new subList(clicked.url));
-		GUI.titles.validate();
-		GUI.titles.repaint();
+		System.out.println("Size: " + GUI.scrollpaneviewport.getComponentCount());
+		GUI.scrollpaneviewport.remove(GUI.shows);
+		GUI.scrollpaneviewport.add(new subList(clicked.url));
+		GUI.scrollpaneviewport.validate();
+		GUI.scrollpaneviewport.repaint();
 	}
 	
 }
@@ -164,9 +164,11 @@ public class GUI extends JFrame {
 	static boolean loggedIn = false;
 	static Parser parser;
 	static GUI main;
-	static JScrollPane titles;
+	static JScrollPane scrollpane;
+	static JViewport scrollpaneviewport;
 	static DB db;
 	static clickable clicky;
+	static mainList shows;
 	
 	Container mainContent;
 	
@@ -183,12 +185,15 @@ public class GUI extends JFrame {
 		parser = new Parser();
 		db = new DB();
 		clicky = new clickable();
+		scrollpane = new JScrollPane();
+		scrollpaneviewport = scrollpane.getViewport();
 		main.addWindowListener(new exit());
+		main.add(scrollpane);
 		switch(parser.loginFromFile()) {
 		case 0:
 			loggedIn = true;
-			titles = new JScrollPane(new mainList());
-			main.add(titles, BorderLayout.CENTER);
+			shows = new mainList();
+			scrollpaneviewport.add(shows);
 			break;
 		case 1:
 			loggedIn = false;
